@@ -40,50 +40,62 @@ class _CategoryScreenState extends State<CategoryScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              TextField(
-                decoration: const InputDecoration(
-                  hintText: 'عنوان دسته بندی'
+
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: TextField(
+                  decoration: const InputDecoration(
+                      hintText: 'عنوان دسته بندی'
+                  ),
+                  controller:  titleTextEditing,
                 ),
-                controller:  titleTextEditing,
               ),
-              TextField(
-                controller:  idTextEditing,
-              ),
+
+              const SizedBox(height: 10,),
 
               // CategoryType DropDown
-              DropdownButtonFormField(
-                decoration: const InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        borderSide:
-                        BorderSide(color: Colors.grey, width: 1.0))),
-                hint: const Text('دسته بندی بر اساس'),
-                selectedItemBuilder: (final context) =>
-                    parentList.map((e) => Text(e.toString())).toList(),
-                items: parentList
-                    .map((e) => DropdownMenuItem(
-                  value: e,
-                  child: Text(e.toString()),
-                )).toList(),
-                onChanged: (final value) {
-                  if(value == parentList[0]){
-                    indexParentList = 1;
-                  }else if (value == parentList[1]){
-                    indexParentList = 2;
-                  }else if (value == parentList[2]){
-                    indexParentList = 3;
-                  }
-                  print(indexParentList.toString());
-                },
+              Padding(padding: EdgeInsets.all(10),
+                child:DropdownButtonFormField(
+                  decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderSide:
+                          BorderSide(color: Colors.grey, width: 1.0))),
+                  hint: const Text('دسته بندی بر اساس'),
+                  selectedItemBuilder: (final context) =>
+                      parentList.map((e) => Text(e.toString())).toList(),
+                  items: parentList
+                      .map((e) => DropdownMenuItem(
+                    value: e,
+                    child: Text(e.toString()),
+                  )).toList(),
+                  onChanged: (final value) {
+                    if(value == parentList[0]){
+                      indexParentList = 1;
+                    }else if (value == parentList[1]){
+                      indexParentList = 2;
+                    }else if (value == parentList[2]){
+                      indexParentList = 3;
+                    }
+                    parentValue = value!;
+                    print(indexParentList.toString());
+                    print(value);
+                  },
+                ),
               ),
 
+
               // DataType DropDown
-              dataTypeChoice(),
+              Padding(padding: EdgeInsets.all(10),
+              child:dataTypeChoice(),
+              ),
 
               // Unit DropDown
-              unitChoice(),
+              Padding(padding: EdgeInsets.all(10),
+                child: unitChoice(),
+              ),
 
               ElevatedButton(onPressed: () {
                 setState(() {
@@ -96,12 +108,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
               ElevatedButton(onPressed: () {
               setState(() {
 
-                parentList.add(titleTextEditing.text.toString());
+                // parentList.add(titleTextEditing.text.toString());
 
                 categoryModelList.add(CategoryModel(
                     id: 1,
                     title: titleTextEditing.text.toString(),
-                    categoryParent: 0,
+                    categoryParent: indexParentList,
                     property: propertyTestList,
                     unitProperty: unitPropertyTestList));
 
@@ -143,7 +155,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                             color: Colors.greenAccent
                         ),
-                        child:  Text('دسته بندی :${categoryModelList[index].title} -- ${categoryModelList[index].property} -- ${categoryModelList[index].unitProperty}'),
+                        child:  Text('دسته بندی :${categoryModelList[index].title} -- ${categoryModelList[index].property} -- ${categoryModelList[index].unitProperty} -- parent--> ${categoryModelList[index].categoryParent.toString()} $parentValue'),
                       ),
                     );
                   },),
